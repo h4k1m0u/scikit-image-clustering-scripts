@@ -2,13 +2,14 @@
 import matplotlib.pyplot as plt
 import skimage.io as io
 from skimage.filters import threshold_otsu
+from skimage.color import rgb2gray
 
 # 1 x 2 grid figure
 fig = plt.figure()
 
-# display origin image
+# display original image
 cell1 = fig.add_subplot(1, 2, 1)
-img = io.imread('flood.jpg')
+img = rgb2gray(io.imread('flood.jpg'))
 plt.imshow(img)
 
 # otsu thresholding of the image
