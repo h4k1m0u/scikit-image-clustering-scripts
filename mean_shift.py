@@ -2,10 +2,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import skimage.io as io
+from sklearn.cluster import estimate_bandwidth, MeanShift
 from skimage.filters import threshold_otsu
-from sklearn import cluster
 
-# 1 x 2 grid figure
+# 1 x 3 grid figure
 fig = plt.figure()
 
 # display original image's channel
@@ -13,17 +13,19 @@ cell1 = fig.add_subplot(1, 3, 1)
 img = io.imread('flood.jpg')[:, :, 0]
 io.imshow(img)
 
-# k-means clustering of the image (population of pixels intensities)
+# mean shift clustering of the image
 # cluster pixel intensities using k-means
 cell2 = fig.add_subplot(1, 3, 2)
 X = img.reshape((-1, 1))
-k_means = cluster.KMeans(n_clusters=5)
-k_means.fit(X)
+bandwidth = estimate_bandwidth(X, quantile=.2, n_samples=500)
+mean_shift = MeanShift(bandwidth, bin_seeding=True)
+mean_shift.fit(X)
 
 # extract means of each cluster & clustered intensities population
-clusters_means = k_means.cluster_centers_.squeeze()
-clustered_X = k_means.labels_
-print 'Clusters Means:', clusters_means
+clusters_means = mean_shift.cluster_centers_.squeeze()
+clustered_X = mean_shift.labels_
+print 'Means:', clusters_means
+print 'Classified:', clustered_X
 
 # get clustered image from clustered intensities
 clustered_img = np.choose(clustered_X, clusters_means)
