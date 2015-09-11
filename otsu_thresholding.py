@@ -22,7 +22,7 @@ def write_image(img, filename):
     dataset = driver.Create(filename, x_size, y_size)
     dataset.GetRasterBand(1).WriteArray(img)
 
-# display original image's channel
+# load original image
 dataset = gdal.Open('img/mozambique-after.tiff')
 band = dataset.GetRasterBand(1)
 img = band.ReadAsArray().astype(np.uint8)
