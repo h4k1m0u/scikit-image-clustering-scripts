@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.pyplot as plt
 from osgeo import gdal
 from skimage.filters import threshold_otsu
 from skimage.morphology import binary_dilation, binary_erosion, binary_closing, binary_opening
@@ -22,7 +21,7 @@ def write_image(img, filename):
     dataset.GetRasterBand(1).WriteArray(img)
 
 # load original image
-dataset = gdal.Open('img/mozambique-after.tiff')
+dataset = gdal.Open('../img/mozambique-after.tiff')
 band = dataset.GetRasterBand(1)
 img = band.ReadAsArray().astype(np.uint8)
 

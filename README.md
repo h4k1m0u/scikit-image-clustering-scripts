@@ -2,17 +2,18 @@
 `Python` scripts using `scikit-image` and `scikit-learn` to cluster images.
 
 ## files:
-**otsu_thresholding.py**: Performs the Otsu thresholding and show the original gray-scale image and the binarized image.  
-**histogram.py**: Calculates & show the histogram of the gray scale image.  
-**morphology.py**: Dilates/Erodes/Closes/Opens the binary thresholded image.  
-**equalization.py**: Thresholding a histogram-equalized image (enhanced in contrast).  
-**kmeans_clustering.py**: Performs a k-means clustering followed by an Otsu thresholding.
-**gaussian_mixture_model.py**: Gaussian Mixture Model on image population.
-**mean_shift.py**: Performs the Mean Shift algorithm on the image.
-**adaptive_filters.py**: Compare adaptive filters (lee, frost, kuan) to mean/median filters.
+**basics/otsu_thresholding.py**: Performs the Otsu thresholding and show the original gray-scale image and the binarized image.  
+**basics/histogram.py**: Calculates & show the histogram of the gray scale image.  
+**basics/morphology.py**: Dilates/Erodes/Closes/Opens the binary thresholded image.  
+**basics/equalization.py**: Thresholding a histogram-equalized image (enhanced in contrast).  
+**preprocessing/adaptive_filters.py**: Compare adaptive filters (lee, frost, kuan) to mean/median filters.
+**clustering/kmeans_clustering.py**: Performs a k-means clustering followed by an Otsu thresholding.
+**clustering/gaussian_mixture_model.py**: Gaussian Mixture Model on image population.
+**clustering/mean_shift.py**: Performs the Mean Shift algorithm on the image.
 
 ## Prerequisites:
 **numpy & scipy**: `pip install numpy scipy`
 **scikit-image**: `pip install scikit-image`
 **scikit-learn**: `pip install scikit-learn`
 **pyradar**: `pip install pyradar`
+**gdal-gdal**: `apt-get install python-gdal`

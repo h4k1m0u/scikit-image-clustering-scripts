@@ -23,7 +23,7 @@ def write_image(img, filename):
     dataset.GetRasterBand(1).WriteArray(img)
 
 # load original image
-dataset = gdal.Open('img/mozambique-after.tiff')
+dataset = gdal.Open('../img/mozambique-after.tiff')
 band = dataset.GetRasterBand(1)
 img = band.ReadAsArray().astype(np.uint8)
 
