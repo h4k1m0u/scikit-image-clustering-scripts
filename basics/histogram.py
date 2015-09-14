@@ -5,7 +5,7 @@ from osgeo import gdal
 from skimage.exposure import histogram
 
 # load original image
-dataset = gdal.Open('../img/mozambique-after.tiff')
+dataset = gdal.Open('img/mozambique-after-subset.tif')
 band = dataset.GetRasterBand(1)
 img = band.ReadAsArray().astype(np.uint8)
 

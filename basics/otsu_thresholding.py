@@ -23,7 +23,7 @@ def write_image(img, filename):
     dataset.GetRasterBand(1).WriteArray(img)
 
 # load original image
-dataset = gdal.Open('../img/mozambique-after.tiff')
+dataset = gdal.Open('img/mozambique-after-subset.tif')
 band = dataset.GetRasterBand(1)
 img = band.ReadAsArray().astype(np.uint8)
 
@@ -31,7 +31,7 @@ img = band.ReadAsArray().astype(np.uint8)
 threshold = threshold_otsu(img)
 img_thresholded = img > threshold
 print 'Threshold for original image:', threshold
-write_image(img_thresholded, 'img/mozambique-after-thresholded.tiff')
+write_image(img_thresholded, 'img/mozambique-after-thresholded.tif')
 
 # image filtered with a mean filter
 img_mean = mean(img, disk(1))
@@ -40,7 +40,7 @@ img_mean = mean(img, disk(1))
 threshold = threshold_otsu(img_mean)
 img_mean_thresholded = img_mean > threshold
 print 'Threshold for Mean-filtered image :', threshold
-write_image(img_mean_thresholded, 'img/mozambique-after-mean-thresholded.tiff')
+write_image(img_mean_thresholded, 'img/mozambique-after-mean-thresholded.tif')
 
 # image filtered with a median filter
 img_median = median(img, disk(1))
@@ -49,4 +49,4 @@ img_median = median(img, disk(1))
 threshold = threshold_otsu(img_median)
 img_median_thresholded = img_median > threshold
 print 'Threshold for Median-filtered image:', threshold
-write_image(img_median_thresholded, 'img/mozambique-after-median-thresholded.tiff')
+write_image(img_median_thresholded, 'img/mozambique-after-median-thresholded.tif')

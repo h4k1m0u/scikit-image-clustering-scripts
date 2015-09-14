@@ -21,16 +21,16 @@ def write_image(img, filename):
     dataset.GetRasterBand(1).WriteArray(img)
 
 # load original image
-dataset = gdal.Open('../img/flood.jpg')
+dataset = gdal.Open('img/mozambique-after-subset.tif')
 band = dataset.GetRasterBand(1)
 img = band.ReadAsArray().astype(np.uint8)
 
 # histogram-equalization of the image (enhance contrast)
 img_equalized = equalize_hist(img)
-write_image(img_equalized, 'img/mozambique-after-thresholded.tiff')
+write_image(img_equalized, 'img/mozambique-after-subset-equalized.tif')
 
 # otsu thresholding of the image
 threshold = threshold_otsu(img_equalized)
 img_equalized_thresholded = img_equalized > threshold
 print 'Threshold:', int(255 * threshold)
-write_image(img_equalized_thresholded, 'img/mozambique-after-thresholded-equalized.tiff')
+write_image(img_equalized_thresholded, 'img/mozambique-after-subset-equalized-thresholded.tif')

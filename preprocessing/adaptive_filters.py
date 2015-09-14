@@ -25,18 +25,18 @@ def write_image(img, filename):
     dataset.GetRasterBand(1).WriteArray(img)
 
 # load original image
-dataset = gdal.Open('../img/mozambique-after-subset.tiff')
+dataset = gdal.Open('img/mozambique-after-subset.tif')
 band = dataset.GetRasterBand(1)
 img = band.ReadAsArray()
 
 # lee filter
 img_lee = lee_filter(img, win_size=3)
-write_image(img_lee.astype(np.uint8), '../img/mozambique-after-subset-lee.tiff')
+write_image(img_lee.astype(np.uint8), 'img/mozambique-after-subset-lee.tif')
 
 # frost filter
 img_frost = frost_filter(img, win_size=3)
-write_image(img_frost.astype(np.uint8), '../img/mozambique-after-subset-frost.tiff')
+write_image(img_frost.astype(np.uint8), 'img/mozambique-after-subset-frost.tif')
 
 # kuan filter
 img_kuan = kuan_filter(img, win_size=3)
-write_image(img_kuan.astype(np.uint8), '../img/mozambique-after-subset-kuan.tiff')
+write_image(img_kuan.astype(np.uint8), 'img/mozambique-after-subset-kuan.tif')

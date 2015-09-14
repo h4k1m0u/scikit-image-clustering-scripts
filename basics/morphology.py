@@ -21,7 +21,7 @@ def write_image(img, filename):
     dataset.GetRasterBand(1).WriteArray(img)
 
 # load original image
-dataset = gdal.Open('../img/mozambique-after.tiff')
+dataset = gdal.Open('img/mozambique-after-subset.tif')
 band = dataset.GetRasterBand(1)
 img = band.ReadAsArray().astype(np.uint8)
 
@@ -29,20 +29,20 @@ img = band.ReadAsArray().astype(np.uint8)
 threshold = threshold_otsu(img)
 img_thresholded = img > threshold
 print 'Threshold for original image:', threshold
-write_image(img_thresholded, 'img/mozambique-after-thresholded.tiff')
+write_image(img_thresholded, 'img/mozambique-after-thresholded.tif')
 
 # dilation of the thresholded image
 img_thresholded_dilated = binary_dilation(img_thresholded)
-write_image(img_thresholded_dilated, 'img/mozambique-after-thresholded-dilated.tiff')
+write_image(img_thresholded_dilated, 'img/mozambique-after-thresholded-dilated.tif')
 
 # erosion of the thresholded image
 img_thresholded_eroded = binary_erosion(img_thresholded)
-write_image(img_thresholded_eroded, 'img/mozambique-after-thresholded-eroded.tiff')
+write_image(img_thresholded_eroded, 'img/mozambique-after-thresholded-eroded.tif')
 
 # closing of the thresholded image
 img_thresholded_closed = binary_closing(img_thresholded)
-write_image(img_thresholded_closed, 'img/mozambique-after-thresholded-closed.tiff')
+write_image(img_thresholded_closed, 'img/mozambique-after-thresholded-closed.tif')
 
 # opening of the thresholded image
 img_thresholded_opened = binary_opening(img_thresholded)
-write_image(img_thresholded_opened, 'img/mozambique-after-thresholded-opened.tiff')
+write_image(img_thresholded_opened, 'img/mozambique-after-thresholded-opened.tif')

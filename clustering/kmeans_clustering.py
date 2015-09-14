@@ -21,7 +21,7 @@ def write_image(img, filename):
     dataset.GetRasterBand(1).WriteArray(img)
 
 # load original image
-dataset = gdal.Open('../img/mozambique-after-subset.tiff')
+dataset = gdal.Open('img/mozambique-after-subset.tif')
 band = dataset.GetRasterBand(1)
 img = band.ReadAsArray().astype(np.uint8)
 
@@ -40,9 +40,9 @@ print 'Clusters Means:', clusters_means
 # get clustered image from clustered intensities
 img_clustered = np.choose(X_clustered, clusters_means)
 img_clustered.shape = img.shape
-write_image(img_clustered, '../img/mozambique-after-subset-kmeans.tiff')
+write_image(img_clustered, 'img/mozambique-after-subset-kmeans.tif')
 
 # otsu thresholding of the binary image obtained
 threshold = threshold_otsu(img_clustered)
 img_thresholded = img_clustered > threshold
-write_image(img_thresholded, '../img/mozambique-after-subset-kmeans-thresholding.tiff')
+write_image(img_thresholded, 'img/mozambique-after-subset-kmeans-thresholding.tif')
