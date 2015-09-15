@@ -12,6 +12,7 @@
 **clustering/gaussian_mixture_model.py**: Gaussian Mixture Model on image population.
 **clustering/mean_shift.py**: Performs the Mean Shift algorithm on the image.
 **segmentation/flood_fill.py**: 8-neighbours flood fill with prior initialization.
+**segmentation/fill_holes.py**: Fill both black and white holes.
 
 ## Prerequisites:
 **numpy & scipy**: `pip install numpy scipy`
