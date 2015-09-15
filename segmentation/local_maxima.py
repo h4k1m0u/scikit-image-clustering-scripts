@@ -1,9 +1,9 @@
 #!/usr/bin/env python
+# http://stackoverflow.com/questions/9111711/get-coordinates-of-local-maxima-in-2d-array-above-certain-value
 import numpy as np
-import matplotlib.pyplot as plt
 from osgeo import gdal
-from skimage.filters import threshold_otsu
-from scipy.ndimage.morphology import binary_fill_holes
+import scipy.ndimage as ndimage
+import scipy.ndimage.filters as filters
 
 # initialize driver
 driver = gdal.GetDriverByName('GTiff')
@@ -25,11 +25,11 @@ dataset = gdal.Open('img/mozambique-after-subset.tif')
 band = dataset.GetRasterBand(1)
 img = band.ReadAsArray().astype(np.uint8)
 
-# otsu thresholding of the original image
-threshold = threshold_otsu(img)
-img_thresholded = img > threshold
-print 'Threshold for original image:', threshold
+# position of local maxima
+data_max = filters.maximum_filter(img, 5)
+maxima = (img == data_max)
+data_min = filters.minimum_filter(img, 5)
+diff = ((data_max - data_min) > 150)
+maxima[diff == 0] = 0
 
-# invert thresholding
-not_img_thresholded = np.invert(img_thresholded)
-write_image(binary_fill_holes(np.invert(binary_fill_holes(not_img_thresholded))), 'img/holes_filled.tif')
+write_image(maxima, 'img/maxima.tif')

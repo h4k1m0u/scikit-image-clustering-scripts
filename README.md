@@ -13,6 +13,7 @@
 **clustering/mean_shift.py**: Performs the Mean Shift algorithm on the image.
 **segmentation/flood_fill.py**: 8-neighbours flood fill with prior initialization.
 **segmentation/fill_holes.py**: Fill both black and white holes.
+**segmentation/local_maxima.py**: Detect objects using local maxima.
 
 ## Prerequisites:
 **numpy & scipy**: `pip install numpy scipy`
