@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 import numpy as np
 import matplotlib.pyplot as plt
-from skimage.filters import threshold_otsu
 import skimage.io as io
 from sklearn import cluster
 
 # load original image
-img = io.imread('myanmar.png', as_grey=True)
+img = io.imread('/home/hakim/Test/myanmar.png', as_grey=True)
 w = img.shape[1]
 h = img.shape[0]
 
