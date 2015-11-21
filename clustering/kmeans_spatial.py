@@ -5,23 +5,28 @@ import skimage.io as io
 from sklearn import cluster
 
 # load original image
-img = io.imread('/home/hakim/Test/myanmar.png', as_grey=True)
+img = io.imread('/home/hakim/Test/kobi.png', as_grey=True)
 w = img.shape[1]
 h = img.shape[0]
 
 # spatial dimensions
-X = np.tile(np.arange(w), (w, 1))
-Y = X.T
-X = X.reshape((-1, 1)).flatten()
-Y = Y.reshape((-1, 1)).flatten()
+X = np.tile(np.arange(w), (h, 1))
+Y = np.tile(np.arange(h), (w, 1)).T
 
-# pixel intensities
-I = img.reshape((-1, 1)).flatten()
+# create feature set
+X = X.flatten()
+Y = Y.flatten()
+I = img.flatten()
+S = np.concatenate((I[:, np.newaxis], X[:, np.newaxis], Y[:, np.newaxis]), axis=1)
+
+# normalize features
+mean = np.mean(S, axis=0)
+std = np.std(S, axis=0, ddof=1)
+S = (S - mean) / std
 
 # clustering
-O = np.concatenate((I[:, np.newaxis], X[:, np.newaxis], Y[:, np.newaxis]), axis=1)
 k_means = cluster.KMeans(n_clusters=2)
-k_means.fit(O)
+k_means.fit(S)
 
 # extract means of each cluster & clustered intensities population
 clusters_means = k_means.cluster_centers_.squeeze()

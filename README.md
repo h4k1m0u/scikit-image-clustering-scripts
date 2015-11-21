@@ -9,6 +9,8 @@
 **basics/difference.py**: performs arithmetic difference between two images.
 **preprocessing/adaptive_filters.py**: Compare adaptive filters (lee, frost, kuan) to mean/median filters.
 **clustering/kmeans_clustering.py**: Performs a k-means clustering followed by an Otsu thresholding.
+**clustering/kmeans_spatial.py**: Performs a k-means clustering taking into account the spatial context (X, Y).
+**clustering/fuzzy_c_means.py**: Clustering using Fuzzy C-means algorithm.
 **clustering/gaussian_mixture_model.py**: Gaussian Mixture Model on image population.
 **clustering/lbp_texture.py**: Local Binary Pattern texture segmentation.
 **clustering/mean_shift.py**: Performs the Mean Shift algorithm on the image.
@@ -20,5 +22,6 @@
 **numpy & scipy**: `pip install numpy scipy`  
 **scikit-image**: `pip install scikit-image`  
 **scikit-learn**: `pip install scikit-learn`  
+**scikit-fuzzy**: `pip install scikit-fuzzy`
 **pyradar**: `pip install pyradar`  
 **gdal-gdal**: `apt-get install python-gdal`
