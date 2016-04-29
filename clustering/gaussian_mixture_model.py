@@ -20,9 +20,9 @@ def write_image(img, filename):
     dataset.GetRasterBand(1).WriteArray(img)
 
 # load original image
-dataset = gdal.Open('img/mozambique-after-subset.tif')
+dataset = gdal.Open('/home/hakim/Roughnesses/myanmar-rakhine-postimage-roughness-po.tif')
 band = dataset.GetRasterBand(1)
-img = band.ReadAsArray().astype(np.uint8)
+img = band.ReadAsArray().astype(np.float)
 
 # gaussian mixture model
 # fit gaussian mixture model to the pixel intensities observation
@@ -37,16 +37,16 @@ print 'Gaussian Means:', g.means_
 img_clustered1 = g.predict(X)
 img_clustered1.shape = img.shape
 img_clustered1  = img_clustered1.astype(np.float)
-write_image(img_clustered1, 'img/mozambique-after-subset-gmm.tif')
+write_image(img_clustered1, 'img/rakhine-gmm.tif')
 
 # predict classes of pixel intensities by thresholding the gmm map of probabilities
 img_clustered2 = g.predict_proba(X)
 img_clustered2 = np.array(map(lambda x: False if x[1] > 0.1 else True, img_clustered2))
 img_clustered2.shape = img.shape
-write_image(img_clustered2, 'img/mozambique-after-subset-gmm-empirical.tif')
+write_image(img_clustered2, 'img/rakhine-gmm-empirical.tif')
 
 # thresholding using average of estimated gaussian means
 threshold = np.average(g.means_)
 print 'Gaussian Means Average:', threshold
 img_thresholded = img > threshold
-write_image(img_thresholded, 'img/mozambique-after-subset-gmm-thresholding.tif')
+write_image(img_thresholded, 'img/rakhine-gmm-thresholding.tif')

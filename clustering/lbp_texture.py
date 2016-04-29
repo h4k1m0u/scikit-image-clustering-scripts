@@ -5,7 +5,7 @@ import skimage.io as io
 from sklearn import cluster
 
 # read image
-img = io.imread('myanmar.png', as_grey=True)
+img = io.imread('/home/hakim/Github/matlab-segmentation/myanmar.png', as_grey=True)
 io.imshow(img)
 io.show()
 

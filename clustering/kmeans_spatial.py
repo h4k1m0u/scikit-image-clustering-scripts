@@ -1,11 +1,29 @@
 #!/usr/bin/env python
 import numpy as np
 import matplotlib.pyplot as plt
+from osgeo import gdal
 import skimage.io as io
 from sklearn import cluster
 
+# initialize driver
+driver = gdal.GetDriverByName('GTiff')
+
+def write_image(img, filename):
+    """
+    Write img array to a file with the given filename
+    Args:
+        img (Band)
+        filename (str)
+    """
+    x_size = img.shape[1]
+    y_size = img.shape[0]
+    dataset = driver.Create(filename, x_size, y_size)
+    dataset.GetRasterBand(1).WriteArray(img)
+
 # load original image
-img = io.imread('/home/hakim/Test/kobi.png', as_grey=True)
+dataset = gdal.Open('/home/hakim/Data/Rakhine-Myanmar/during/postimage-subset.data/Sigma0_VV.img')
+band = dataset.GetRasterBand(1)
+img = band.ReadAsArray().astype(np.float64)
 w = img.shape[1]
 h = img.shape[0]
 
@@ -35,5 +53,4 @@ clusters = k_means.labels_
 # get clustered image from clustered intensities
 img_clustered = np.choose(clusters, [0.0, 1.0])
 img_clustered.shape = img.shape
-io.imshow(img_clustered)
-io.show()
+write_image(img_clustered, 'img/rahkine-clustered.tif')

@@ -23,15 +23,16 @@ def write_image(img, filename):
     dataset.GetRasterBand(1).WriteArray(img)
 
 # load original image
-dataset = gdal.Open('img/mozambique-after-subset.tif')
+dataset = gdal.Open('/home/hakim/Data/Rakhine-Myanmar/during/postimage-subset.data/Sigma0_VV.img')
 band = dataset.GetRasterBand(1)
-img = band.ReadAsArray().astype(np.uint8)
+img = band.ReadAsArray().astype(np.float32)
 
 # otsu thresholding of the original image
 threshold = threshold_otsu(img)
 img_thresholded = img > threshold
 print 'Threshold for original image:', threshold
-write_image(img_thresholded, 'img/mozambique-after-thresholded.tif')
+write_image(img_thresholded, 'img/rakhine-after-thresholded.tif')
+exit()
 
 # image filtered with a mean filter
 img_mean = mean(img, disk(1))
