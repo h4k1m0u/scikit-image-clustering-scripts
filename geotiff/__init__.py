@@ -1,0 +1,1 @@
+"""IO and processing of GeoTIFF images opened with GDAL."""
