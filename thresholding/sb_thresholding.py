@@ -6,8 +6,9 @@ from geotiff.io import IO
 
 # constants
 SPLIT_SIZE = 100
-PATH = 'C:/Data/Tewkesbury-SAR/building-reconstruction'
-IN_PATH = PATH + '/stack.data/Sigma0_HH_mst_25Jul2007_db.img'
+PATH = 'C:/Data'
+IN_PATH = PATH + '/namibia-flipped.data/Sigma0_HH.img'
+OUT_PATH = PATH + '/namibia-splits/serbia-split-(%s,%s).tiff'
 
 # load original image
 img = IO.read(IN_PATH)
@@ -15,7 +16,7 @@ img_xsize = img.shape[1]
 img_ysize = img.shape[0]
 
 # extract splits iteratively & their thresholds
-splits_thresholds = []
+local_thresholds = []
 y_offset = 0
 while y_offset < img_ysize:
     x_offset = 0
@@ -31,24 +32,20 @@ while y_offset < img_ysize:
         )
         split = img[x_offset:x_offset + split_xsize,
                     y_offset:y_offset + split_ysize]
-        splits_thresholds.append(threshold_otsu(split))
+        local_thresholds.append(threshold_otsu(split))
 
         x_offset += SPLIT_SIZE
 
     y_offset += SPLIT_SIZE
 
+# average of local otsu thresholds
+local_threshold = sum(local_thresholds) / len(local_thresholds)
+print 'Local threshold:', local_threshold
+
 # global otsu threshold
 global_threshold = threshold_otsu(img)
-print 'Global threshold: %f dB' % global_threshold
+print 'Global threshold:', global_threshold
 
-# average of local otsu thresholds
-avg_split_threshold = sum(splits_thresholds) / len(splits_thresholds)
-print 'Split threshold: %f dB' % avg_split_threshold
-
-# otsu thresholding
-img_thresholded = img > global_threshold
-IO.write(img_thresholded, PATH + '/tewkesbury-thresholded.tif')
-
-# split-based thresholding
-img_sb_thresholded = img > avg_split_threshold
-IO.write(img_sb_thresholded, PATH + '/tewkesbury-sb-thresholded.tif')
+# otsu thresholding using the average of splits thresholds
+img_thresholded = img > local_threshold
+IO.write(img_thresholded, 'C:/Data/namibia-flipped-split-thresholded.tif')
