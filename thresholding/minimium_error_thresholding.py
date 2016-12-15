@@ -55,10 +55,8 @@ in_arr = np.asarray(in_img)
 #in_arr = IO.read(input_file)
 
 # show input image
-"""
 plt.figure()
 plt.imshow(in_img, cmap='gray')
-"""
 
 # output image
 t = kittler(in_arr)
@@ -67,9 +65,7 @@ out_arr[:, :] = 0
 out_arr[in_arr >= t] = 255
 
 # show output image
-"""
 plt.figure()
 plt.imshow(out_arr, cmap='gray')
 
 plt.show()
-"""
