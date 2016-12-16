@@ -54,7 +54,7 @@ while T ~= Tprev
   % Calculate some statistics.
   mu = B(y,T)/A(y,T);
   nu = (B(y,n)-B(y,T))/(A(y,n)-A(y,T));
-  p = A(y,T)/A(y,n); fprintf('p: %f\n', p);
+  p = A(y,T)/A(y,n);
   q = (A(y,n)-A(y,T)) / A(y,n);
   sigma2 = C(y,T)/A(y,T)-mu^2;
   tau2 = (C(y,n)-C(y,T)) / (A(y,n)-A(y,T)) - nu^2;

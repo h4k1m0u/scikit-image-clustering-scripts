@@ -1,18 +1,13 @@
 #!/usr/bin/env python
-import numpy as np
 import matplotlib.pyplot as plt
-from osgeo import gdal
-from skimage.exposure import histogram
+from geotiff.io import IO
 
 
 # load original image
-input_file = '/'.join(('C:', 'Data', 'Tewkesbury-LiDAR', 'stack-lidar.data',
+input_file = '/'.join(('C:', 'Data', 'Tewkesbury-LiDAR', 'subset.data',
                        'Sigma0_HH_slv1_25Jul2007.img'))
-dataset = gdal.Open(input_file)
-band = dataset.GetRasterBand(1)
-img = band.ReadAsArray().astype(np.float32)
+img = IO.read(input_file)
 
 # histogram of the image
-hist, bins = histogram(img, nbins=10)
-plt.plot(bins, hist)
+plt.hist(img.flatten(), bins=10, range=[0, 10])
 plt.show()

@@ -2,9 +2,9 @@
 ###############################################################################
 # https://github.com/fiji/Auto_Threshold/
 ###############################################################################
-from PIL import Image
 import numpy as np
 from math import isnan, floor
+from geotiff.io import IO
 
 
 def A(y, j):
@@ -72,21 +72,20 @@ def mean(h):
     return t
 
 
-def min_error_thresholding(arr):
+def min_error_thresholding(arr, n):
     """
         Args:
             arr(numpy.ndarray): 1D image vector.
+            n(int): Number of histogram bins.
 
         Returns:
             t(int): Mean-error threshold of the histogram.
     """
-    n = 255
-    t = round(np.mean(arr))
+    t = int(round(np.mean(arr)))
     t_prev = np.nan
-    print 'threshold', t
 
     # image histogram
-    h = np.bincount(arr_in.ravel(), minlength=256)
+    h = np.bincount(arr.ravel(), minlength=n+1)
 
     while t != t_prev:
         # calculate some statistics
@@ -95,8 +94,7 @@ def min_error_thresholding(arr):
         p = A(h, t) / A(h, n)
         q = (A(h, n) - A(h, t)) / A(h, n)
         sigma2 = C(h, t) / A(h, t) - mu**2
-        tau2 = (C(h, n) - C(h, t)) / \
-               (A(h, n) - A(h, t)) - nu**2
+        tau2 = (C(h, n) - C(h, t)) / (A(h, n) - A(h, t)) - nu**2
 
         # the terms of the quadratic equation to be solved
         w0 = 1.0/sigma2 - 1.0/tau2
@@ -125,7 +123,14 @@ def min_error_thresholding(arr):
     return t
 
 
+# open image, convert to dB, and shift to positive values
+DIR = 'C:/Data/Tewkesbury-LiDAR'
+img = IO.read(DIR + '/subset.data/Sigma0_HH_slv1_25Jul2007.img')
+img_db = 10 * np.log10(img)
+img_db_int = np.round(img_db).astype(int)
+img_db_int_pos = img_db_int + abs(np.min(img_db_int))
+
 # calculate threshold
-img_in = Image.open('img/lena.bmp')
-arr_in = np.asarray(img_in)
-threshold = min_error_thresholding(arr_in.ravel())
+n = np.max(img_db_int_pos)  # 255
+threshold = min_error_thresholding(img_db_int_pos.ravel(), n)
+print 'threshold:', threshold
