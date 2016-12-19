@@ -95,6 +95,7 @@ def min_error_thresholding(arr, n):
         q = (A(h, n) - A(h, t)) / A(h, n)
         sigma2 = C(h, t) / A(h, t) - mu**2
         tau2 = (C(h, n) - C(h, t)) / (A(h, n) - A(h, t)) - nu**2
+        tau2 = tau2 if tau2 != 0 else 1.0  # avoid zeroDivision
 
         # the terms of the quadratic equation to be solved
         w0 = 1.0/sigma2 - 1.0/tau2
@@ -123,14 +124,18 @@ def min_error_thresholding(arr, n):
     return t
 
 
-# open image, convert to dB, and shift to positive values
-DIR = 'C:/Data/Tewkesbury-LiDAR'
-img = IO.read(DIR + '/subset.data/Sigma0_HH_slv1_25Jul2007.img')
-img_db = 10 * np.log10(img)
-img_db_int = np.round(img_db).astype(int)
-img_db_int_pos = img_db_int + abs(np.min(img_db_int))
+if __name__ == '__main__':
+    # open image
+    DIR = 'C:/Data/Tewkesbury-LiDAR'
+    img = IO.read(DIR + '/stack-lidar.data/Sigma0_HH_slv1_25Jul2007.img')
 
-# calculate threshold
-n = np.max(img_db_int_pos)  # 255
-threshold = min_error_thresholding(img_db_int_pos.ravel(), n)
-print 'threshold:', threshold
+    # calculate dB positive image
+    img_db = 10 * np.log10(img)
+    img_db[img_db == -np.inf] = np.max(img_db)  # replace 0.0 at the borders
+    img_db_int = np.round(img_db).astype(int)
+    img_db_int_pos = img_db_int + abs(np.min(img_db_int))
+
+    # Kittler thresholding
+    n = np.max(img_db_int_pos)  # 255
+    threshold = min_error_thresholding(img_db_int_pos.ravel(), n)
+    print 'Kittler threshold:', threshold

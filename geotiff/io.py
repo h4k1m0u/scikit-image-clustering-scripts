@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 """Read/Write operations on images opened with GDAL."""
-import numpy as np
 from osgeo import gdal
 
 
@@ -20,7 +19,7 @@ class IO:
         # load original image
         dataset = gdal.Open(filename)
         band = dataset.GetRasterBand(1)
-        arr = band.ReadAsArray().astype(np.float32)
+        arr = band.ReadAsArray()
         return arr
 
     @staticmethod
