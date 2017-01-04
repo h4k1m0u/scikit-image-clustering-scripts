@@ -1,28 +1,12 @@
 #!/usr/bin/env python
 import numpy as np
-import matplotlib.pyplot as plt
-from osgeo import gdal
 from sklearn import mixture
+from geotiff.io import IO
 
-# initialize driver
-driver = gdal.GetDriverByName('GTiff')
-
-def write_image(img, filename):
-    """
-    Write img array to a file with the given filename
-    Args:
-        img (Band)
-        filename (str)
-    """
-    x_size = img.shape[1]
-    y_size = img.shape[0]
-    dataset = driver.Create(filename, x_size, y_size)
-    dataset.GetRasterBand(1).WriteArray(img)
 
 # load original image
-dataset = gdal.Open('/home/hakim/Roughnesses/myanmar-rakhine-postimage-roughness-po.tif')
-band = dataset.GetRasterBand(1)
-img = band.ReadAsArray().astype(np.float)
+DIR = 'C:/Data/Tewkesbury-LiDAR'
+img = IO.read(DIR + '/stack-lidar.data/Sigma0_HH_slv1_25Jul2007.img')
 
 # gaussian mixture model
 # fit gaussian mixture model to the pixel intensities observation
@@ -36,17 +20,18 @@ print 'Gaussian Means:', g.means_
 # predict classes of pixel intensities from normal gmm
 img_clustered1 = g.predict(X)
 img_clustered1.shape = img.shape
-img_clustered1  = img_clustered1.astype(np.float)
-write_image(img_clustered1, 'img/rakhine-gmm.tif')
+img_clustered1 = img_clustered1.astype(np.float)
+IO.write(img_clustered1, DIR + '/gmm.tif')
 
-# predict classes of pixel intensities by thresholding the gmm map of probabilities
+# predict classes of pixel intensities by thresholding the gmm probabilities
 img_clustered2 = g.predict_proba(X)
-img_clustered2 = np.array(map(lambda x: False if x[1] > 0.1 else True, img_clustered2))
+img_clustered2 = np.array(map(lambda x: False if x[1] > 0.1 else True,
+                              img_clustered2))
 img_clustered2.shape = img.shape
-write_image(img_clustered2, 'img/rakhine-gmm-empirical.tif')
+IO.write(img_clustered2, DIR + '/gmm-empirical.tif')
 
 # thresholding using average of estimated gaussian means
 threshold = np.average(g.means_)
 print 'Gaussian Means Average:', threshold
 img_thresholded = img > threshold
-write_image(img_thresholded, 'img/rakhine-gmm-thresholding.tif')
+IO.write(img_thresholded, DIR + '/gmm-thresholding.tif')

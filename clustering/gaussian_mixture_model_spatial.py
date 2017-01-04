@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 import numpy as np
-import matplotlib.pyplot as plt
-import skimage.io as io 
 from sklearn import mixture
+from geotiff.io import IO
+
 
 # load original image
-img = io.imread('/home/hakim/Test/myanmar.png', as_grey=True)
+DIR = 'C:/Data/Tewkesbury-LiDAR'
+img = IO.read(DIR + '/stack-lidar.data/Sigma0_HH_slv1_25Jul2007.img')
 
 # gaussian mixture model
 # fit gaussian mixture model to the pixel intensities observation
@@ -19,11 +20,10 @@ print 'Gaussian Means:', g.means_
 # predict classes of pixel intensities from normal gmm
 img_clustered = g.predict(X)
 img_clustered.shape = img.shape
-img_clustered  = img_clustered.astype(np.float)
+img_clustered = img_clustered.astype(np.float)
 
-# show clustered image
-io.imshow(img_clustered)
-io.show()
+# save clustered image
+IO.write(img_clustered, DIR + '/gmm.tif')
 
 # image size
 img_gmm = np.empty_like(img_clustered)
@@ -36,19 +36,19 @@ step = 1
 for i in xrange(1, h-1):
     for j in xrange(1, l-1):
         # counts of #elems/cluster in the neighbourhood
-        c, f = np.unique(img_clustered[i-step:i+step+1, j-step:j+step+1], return_counts=True)
+        c, f = np.unique(img_clustered[i-step:i+step+1, j-step:j+step+1],
+                         return_counts=True)
         freqs = dict(zip(c, f))
 
         # switch to the majority cluster in the neighbourhood
         try:
             if img_clustered[i, j] != 0.0 and freqs[0.0] > 4:
                 img_clustered[i, j] = 0.0
-            elif img_clustered[i, j] != 1.0 and freqs[1.0] > 4: 
+            elif img_clustered[i, j] != 1.0 and freqs[1.0] > 4:
                 img_clustered[i, j] = 1.0
         except KeyError, e:
             pass
 
 # show clustered image with spatial context
 print 'Eqality test:', (img_gmm == img_clustered).all()
-io.imshow(img_clustered)
-io.show()
+IO.write(img_clustered, DIR + '/gmm-spatial.tif')

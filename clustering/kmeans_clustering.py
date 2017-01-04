@@ -1,29 +1,13 @@
 #!/usr/bin/env python
 import numpy as np
-import matplotlib.pyplot as plt
-from osgeo import gdal
 from skimage.filters import threshold_otsu
 from sklearn import cluster
+from geotiff.io import IO
 
-# initialize driver
-driver = gdal.GetDriverByName('GTiff')
-
-def write_image(img, filename):
-    """
-    Write img array to a file with the given filename
-    Args:
-        img (Band)
-        filename (str)
-    """
-    x_size = img.shape[1]
-    y_size = img.shape[0]
-    dataset = driver.Create(filename, x_size, y_size)
-    dataset.GetRasterBand(1).WriteArray(img)
 
 # load original image
-dataset = gdal.Open('/home/hakim/Data/Rakhine-Myanmar/during/postimage-subset.data/Sigma0_VV.img')
-band = dataset.GetRasterBand(1)
-img = band.ReadAsArray().astype(np.float64)
+DIR = 'C:/Data/Tewkesbury-LiDAR'
+img = IO.read(DIR + '/stack-lidar.data/Sigma0_HH_slv1_25Jul2007.img')
 
 # k-means clustering of the image (population of pixels intensities)
 # cluster pixel intensities using k-means
@@ -40,9 +24,9 @@ print 'Clusters Means:', clusters_means
 # get clustered image from clustered intensities
 img_clustered = np.choose(X_clustered, (0, 1))
 img_clustered.shape = img.shape
-write_image(img_clustered, 'img/rahkine-kmeans.tif')
+IO.write(img_clustered, DIR + '/kmeans.tif')
 
 # otsu thresholding of the binary image obtained
 threshold = threshold_otsu(img_clustered)
 img_thresholded = img_clustered > threshold
-write_image(img_thresholded, 'img/rakhine-kmeans-thresholding.tif')
+IO.write(img_thresholded, DIR + '/kmeans-thresholding.tif')
